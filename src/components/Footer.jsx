@@ -15,7 +15,8 @@ function Footer() {
             { name: 'About', href: '/about' },
             { name: 'Support', href: '/support' },
             { name: 'Privacy', href: '/privacy' },
-            { name: 'Terms', href: '/terms' }
+            { name: 'Terms', href: '/terms' },
+            { name: 'Verify Certificate', href: '/verify' }
         ],
         social: [
             {

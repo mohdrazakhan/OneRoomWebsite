@@ -9,6 +9,13 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // --- CERTIFICATES RULES ---
+    // Allow anyone to read and verify certificates publicly
+    match /certificates/{certificateId} {
+      allow read: if true;
+      allow write: if false; // Add/edit via Firebase Console only
+    }
+
     // --- APP RULES (MANDATORY) ---
 
     // Allow collection group queries on taskInstances where the caller is the assignee
