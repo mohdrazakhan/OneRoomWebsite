@@ -1,3 +1,5 @@
+import '../styles/About.css'
+
 function AboutPage() {
     return (
         <main className="page-container">
@@ -59,84 +61,6 @@ function AboutPage() {
                     </div>
                 </section>
             </div>
-
-            <style jsx>{`
-                .page-container {
-                    padding-top: 100px;
-                    padding-bottom: 4rem;
-                    min-height: 80vh;
-                }
-                .page-header {
-                    text-align: center;
-                    margin-bottom: 4rem;
-                }
-                .page-header h1 {
-                    font-size: 3rem;
-                    margin-bottom: 1rem;
-                }
-                .subtitle {
-                    font-size: 1.25rem;
-                    color: var(--text-muted);
-                }
-                .page-content {
-                    max-width: 800px;
-                    margin: 0 auto;
-                }
-                .content-block {
-                    margin-bottom: 3rem;
-                }
-                .content-block h2 {
-                    margin-bottom: 1rem;
-                    color: var(--primary);
-                }
-                .content-block p {
-                    line-height: 1.8;
-                    color: var(--text-main);
-                    margin-bottom: 1rem;
-                }
-                .values-list {
-                    list-style-type: none;
-                }
-                .values-list li {
-                    margin-bottom: 0.5rem;
-                    padding-left: 1.5rem;
-                    position: relative;
-                }
-                .values-list li::before {
-                    content: "•";
-                    color: var(--primary);
-                    font-weight: bold;
-                    position: absolute;
-                    left: 0;
-                }
-                .founder-profile {
-                    display: flex;
-                    align-items: center;
-                    gap: 1.5rem;
-                    margin-top: 2rem;
-                }
-                .founder-image {
-                    width: 80px;
-                    height: 80px;
-                    border-radius: 50%;
-                    object-fit: cover;
-                    border: 3px solid var(--primary-light);
-                }
-                .founder-signature {
-                    font-style: italic;
-                    font-weight: 600;
-                    margin-bottom: 0.25rem;
-                }
-                .linkedin-link {
-                    color: var(--primary);
-                    font-weight: 500;
-                    font-size: 0.9rem;
-                    text-decoration: none;
-                }
-                .linkedin-link:hover {
-                    text-decoration: underline;
-                }
-            `}</style>
         </main>
     )
 }

@@ -1,3 +1,5 @@
+import '../styles/Legal.css'
+
 function TermsPage() {
     return (
         <main className="page-container">
@@ -61,52 +63,6 @@ function TermsPage() {
                     </section>
                 </div>
             </div>
-
-            <style jsx>{`
-                .page-container {
-                    padding-top: 100px;
-                    padding-bottom: 4rem;
-                }
-                .page-header {
-                    margin-bottom: 3rem;
-                    border-bottom: 1px solid var(--border);
-                    padding-bottom: 2rem;
-                }
-                .page-header h1 {
-                    font-size: 2.5rem;
-                    margin-bottom: 0.5rem;
-                }
-                .last-updated {
-                    color: var(--text-muted);
-                    font-style: italic;
-                }
-                .legal-content {
-                    max-width: 800px;
-                    margin: 0 auto;
-                }
-                .legal-content section {
-                    margin-bottom: 2.5rem;
-                }
-                .legal-content h2 {
-                    font-size: 1.5rem;
-                    margin-bottom: 1rem;
-                    color: var(--text-main);
-                }
-                .legal-content p {
-                    margin-bottom: 1rem;
-                    line-height: 1.7;
-                    color: var(--text-muted);
-                }
-                .legal-content ul {
-                    list-style-type: disc;
-                    padding-left: 1.5rem;
-                    color: var(--text-muted);
-                    margin-bottom: 1rem;
-                }
-                .legal-content li {
-                    margin-bottom: 0.5rem;
-                }
-            `}</style>
         </main>
     )
 }
