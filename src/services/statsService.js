@@ -1,4 +1,4 @@
-import { db } from '../config/firebase';
+import { db, firebaseInitialized } from '../config/firebase';
 import { doc, getDoc, collection, getDocs, query, where, onSnapshot } from 'firebase/firestore';
 
 /**
@@ -26,6 +26,10 @@ class StatsService {
      * This is the recommended approach for performance
      */
     async getAggregatedStats() {
+        if (!firebaseInitialized || !db) {
+            console.warn('Firebase not initialized, returning default stats');
+            return this.getDefaultStats();
+        }
         try {
             const statsDoc = await getDoc(doc(db, 'appStats', 'global'));
 
@@ -47,18 +51,29 @@ class StatsService {
      * @returns {Function} Unsubscribe function
      */
     subscribeToStats(callback) {
-        const statsDocRef = doc(db, 'appStats', 'global');
-
-        return onSnapshot(statsDocRef, (doc) => {
-            if (doc.exists()) {
-                callback(doc.data());
-            } else {
-                callback(this.getDefaultStats());
-            }
-        }, (error) => {
-            console.error('Error subscribing to stats:', error);
+        if (!firebaseInitialized || !db) {
+            console.warn('Firebase not initialized, falling back to static updates');
             callback(this.getDefaultStats());
-        });
+            return () => {};
+        }
+        try {
+            const statsDocRef = doc(db, 'appStats', 'global');
+
+            return onSnapshot(statsDocRef, (doc) => {
+                if (doc.exists()) {
+                    callback(doc.data());
+                } else {
+                    callback(this.getDefaultStats());
+                }
+            }, (error) => {
+                console.error('Error subscribing to stats:', error);
+                callback(this.getDefaultStats());
+            });
+        } catch (error) {
+            console.error('Failed to subscribe to stats:', error);
+            callback(this.getDefaultStats());
+            return () => {};
+        }
     }
 
     /**
@@ -66,6 +81,9 @@ class StatsService {
      * This queries your actual collections to count documents
      */
     async calculateStatsFromCollections() {
+        if (!firebaseInitialized || !db) {
+            return this.getDefaultStats();
+        }
         try {
             // Count active users
             const usersSnapshot = await getDocs(collection(db, 'users'));
@@ -112,6 +130,14 @@ class StatsService {
      * For now, we'll fetch from Firebase where you can manually update
      */
     async getPlayStoreStats() {
+        if (!firebaseInitialized || !db) {
+            return {
+                rating: 4.8,
+                downloads: 50000,
+                reviews: 2500,
+                lastUpdated: new Date()
+            };
+        }
         try {
             const playStoreDoc = await getDoc(doc(db, 'appStats', 'playStore'));
 

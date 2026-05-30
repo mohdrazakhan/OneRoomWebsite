@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
-import { db } from '../config/firebase';
+import { db, firebaseInitialized } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import { t } from '../utils/i18n';
 import './VerifyCertificatePage.css';
 
 function VerifyCertificatePage() {
@@ -27,6 +28,12 @@ function VerifyCertificatePage() {
     setLoading(true);
     setError(null);
     setCertificateData(null);
+
+    if (!firebaseInitialized || !db) {
+      setError("Verification service is currently unavailable (database not connected).");
+      setLoading(false);
+      return;
+    }
 
     try {
       // Replace slashes with hyphens to match the document ID format
@@ -56,14 +63,14 @@ function VerifyCertificatePage() {
     <main className="page-container">
       <div className="container">
         <div className="verify-header text-center section-header reveal">
-          <h1>Verify Certificate</h1>
-          <p>Enter a certificate ID to view details to ensure document authenticity.</p>
+          <h1>{t('Verify Certificate')}</h1>
+          <p>{t('Enter a certificate ID to view details to ensure document authenticity.')}</p>
         </div>
 
         <div className="verify-card reveal">
           <form className="verify-form" onSubmit={handleVerify}>
             <div className="form-group">
-              <label htmlFor="certificateId">Certificate ID</label>
+              <label htmlFor="certificateId">{t('Certificate ID')}</label>
               <input
                 type="text"
                 id="certificateId"
@@ -74,7 +81,7 @@ function VerifyCertificatePage() {
               />
             </div>
             <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
-              {loading ? 'Verifying...' : 'Verify'}
+              {loading ? t('Verifying...') : t('Verify')}
             </button>
           </form>
 
@@ -89,7 +96,7 @@ function VerifyCertificatePage() {
             <div className="verify-result success">
               <div className="verify-message success">
                 <span className="icon">✅</span>
-                Verified Successfully
+                {t('Verified Successfully')}
               </div>
               <div className="certificate-details">
                 {Object.entries(certificateData).map(([key, value]) => (
@@ -108,7 +115,7 @@ function VerifyCertificatePage() {
               </div>
 
               <div className="qr-code-section" style={{ marginTop: '30px', textAlign: 'center' }}>
-                <h4 style={{ marginBottom: '16px', color: 'var(--text-main)' }}>Scan to Verify</h4>
+                <h4 style={{ marginBottom: '16px', color: 'var(--text-main)' }}>{t('Scan to Verify')}</h4>
                 <div style={{ display: 'inline-block', padding: '16px', background: '#fff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)' }}>
                   <QRCodeSVG 
                     value={`${window.location.hostname === 'localhost' ? 'https://oneroom.app' : window.location.origin}/verify?id=${certificateId}`} 
@@ -116,7 +123,7 @@ function VerifyCertificatePage() {
                   />
                 </div>
                 <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '16px' }}>
-                  Share this QR code or link to instantly verify this certificate.
+                  {t('Share this QR code or link to instantly verify this certificate.')}
                   <br />
                   <a 
                     href={`${window.location.hostname === 'localhost' ? 'https://oneroom.app' : window.location.origin}/verify?id=${certificateId}`} 
