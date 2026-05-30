@@ -3,10 +3,10 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    z-index: 10000;
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     padding: 1rem 0;
@@ -45,10 +45,7 @@
     font-family: var(--font-heading);
     font-size: 2.2rem;
     font-weight: 800;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--primary);
 }
 
 .nav-links {
@@ -58,10 +55,10 @@
 }
 
 .nav-links .btn-primary {
-    background: var(--primary);
+    background: var(--brand-purple);
     color: white;
-    border: 2px solid var(--primary);
-    box-shadow: 0 4px 15px rgba(142, 124, 240, 0.25);
+    border: 2px solid var(--brand-purple);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.15);
     font-weight: 600;
 }
 
@@ -69,7 +66,7 @@
     background: var(--primary-hover);
     border-color: var(--primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(142, 124, 240, 0.4);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
 }
 
 .nav-links a {
@@ -87,15 +84,17 @@
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    background: var(--brand-purple);
     transition: width 0.3s ease;
 }
 
-.nav-links a:hover {
-    color: var(--primary);
+.nav-links a:hover,
+.nav-links a.active-link {
+    color: var(--brand-purple);
 }
 
-.nav-links a:hover::after {
+.nav-links a:hover::after,
+.nav-links a.active-link::after {
     width: 100%;
 }
 

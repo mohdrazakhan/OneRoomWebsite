@@ -8,8 +8,8 @@ function Footer() {
         product: [
             { name: 'Features', href: '/features' },
             { name: 'Pricing', href: '/pricing' },
-            { name: 'FAQ', href: '/faq' },
-            { name: 'Testimonials', href: '/#testimonials' }
+            { name: 'How it Works', href: '/how-it-works' },
+            { name: 'Community', href: '/community' }
         ],
         company: [
             { name: 'About', href: '/about' },

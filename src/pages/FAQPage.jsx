@@ -2,7 +2,7 @@ import FAQ from '../components/FAQ'
 
 function FAQPage() {
     return (
-        <main style={{ paddingTop: '100px', minHeight: '80vh' }}>
+        <main className="page-container">
             <FAQ />
         </main>
     )

@@ -53,7 +53,7 @@ function VerifyCertificatePage() {
   };
 
   return (
-    <div className="verify-page">
+    <main className="page-container">
       <div className="container">
         <div className="verify-header text-center section-header reveal">
           <h1>Verify Certificate</h1>
@@ -73,7 +73,7 @@ function VerifyCertificatePage() {
                 required
               />
             </div>
-            <button type="submit" className="button primary" disabled={loading}>
+            <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
               {loading ? 'Verifying...' : 'Verify'}
             </button>
           </form>
@@ -98,8 +98,8 @@ function VerifyCertificatePage() {
                     <span className="detail-value">
                       {key.toLowerCase() === 'email' 
                         ? (typeof value === 'string' 
-                            ? value.replace(/(.{1})(.*)(@.*)/, (gp1, gp2, gp3, gp4) => gp2 + "*".repeat(gp3.length) + gp4)
-                            : value)
+                          ? value.replace(/(.{1})(.*)(@.*)/, (gp1, gp2, gp3, gp4) => gp2 + "*".repeat(gp3.length) + gp4)
+                          : value)
                         : (typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value))
                       }
                     </span>
@@ -108,19 +108,19 @@ function VerifyCertificatePage() {
               </div>
 
               <div className="qr-code-section" style={{ marginTop: '30px', textAlign: 'center' }}>
-                <h4 style={{ marginBottom: '16px', color: 'var(--text-dark)' }}>Scan to Verify</h4>
+                <h4 style={{ marginBottom: '16px', color: 'var(--text-main)' }}>Scan to Verify</h4>
                 <div style={{ display: 'inline-block', padding: '16px', background: '#fff', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)' }}>
                   <QRCodeSVG 
                     value={`${window.location.hostname === 'localhost' ? 'https://oneroom.app' : window.location.origin}/verify?id=${certificateId}`} 
                     size={160} 
                   />
                 </div>
-                <p style={{ fontSize: '14px', color: 'var(--text-light)', marginTop: '16px' }}>
+                <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '16px' }}>
                   Share this QR code or link to instantly verify this certificate.
                   <br />
                   <a 
                     href={`${window.location.hostname === 'localhost' ? 'https://oneroom.app' : window.location.origin}/verify?id=${certificateId}`} 
-                    style={{ color: 'var(--primary-color)', textDecoration: 'none', wordBreak: 'break-all' }} 
+                    style={{ color: 'var(--brand-purple)', textDecoration: 'none', wordBreak: 'break-all' }} 
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
@@ -132,7 +132,7 @@ function VerifyCertificatePage() {
           )}
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

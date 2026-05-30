@@ -11,17 +11,9 @@
 
 ## 🎯 Overview
 
-This is the marketing website for **OneRoom**, the all-in-one roommate management application. The website showcases app features, displays real-time statistics from Firebase, and provides download links for iOS and Android.
+This is the marketing website for **OneRoom**, the all-in-one roommate management application. The website showcases app features, displays real-time statistics from Firebase Firestore, and provides download links for iOS and Android.
 
-### ✨ Key Features
-
-- 🔥 **Real-time Stats** - Live data from Firebase Firestore
-- 📊 **Play Store Integration** - Automatic rating and download updates
-- ⚡ **Lightning Fast** - Built with Vite and React
-- 🎨 **Modern Design** - Glassmorphism, gradients, and animations
-- 📱 **Fully Responsive** - Works on all devices
-- 🌐 **SEO Optimized** - Meta tags, semantic HTML
-- 🔄 **Auto-Updates** - Real-time data synchronization
+It also features a complete interactive feature sandbox on the **How it Works** page and an advanced context-aware AI Chatbot (**Roomy**) powered by Gemini to help prospective users understand the application's features and founder's story.
 
 ---
 
@@ -31,98 +23,131 @@ This is the marketing website for **OneRoom**, the all-in-one roommate managemen
 
 - Node.js 18+ installed
 - Firebase project set up
+- Gemini API Key (optional, for chatbot functionality)
 - npm or yarn package manager
 
-### Installation
+### Installation & Local Development
 
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/oneroom-website.git
-cd oneroom-website
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/yourusername/oneroom-website.git
+   cd oneroom-website/Website
+   ```
 
-# Install dependencies
-cd react-app
-npm install
+2. **Configure Environment Variables**
+   Create a `.env` file at the root of the `Website/` directory (see the [Environment Setup](#-environment-setup) section below).
 
-# Start development server
-npm run dev
-```
+3. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+4. **Start Development Server**
+   ```bash
+   npm run dev
+   ```
 
 Visit `http://localhost:5173` to see the website!
 
 ---
 
-## 🔥 Firebase Setup
+## 🔑 Environment Setup
 
-The website displays **real, live data** from Firebase Firestore.
+The website uses a git-ignored `.env` file at the root to store Firebase credentials and the Gemini API key securely. **Never commit the `.env` file to version control.**
 
-### Quick Setup (5 Minutes)
+Create a `.env` file in the root `Website/` directory with the following variables:
 
-1. **Configure Firebase**
-   - Open `react-app/src/config/firebase.js`
-   - Add your Firebase credentials
+```env
+# Gemini API Configuration (for Chatbot Roomy)
+VITE_GEMINI_API_KEY="your-gemini-api-key-here"
 
-2. **Create Firestore Document**
-   - Collection: `appStats`
-   - Document: `global`
-   - Add fields: `activeUsers`, `tasksCompleted`, etc.
+# Firebase Client Configuration (for Real-time Stats)
+VITE_FIREBASE_API_KEY="your-firebase-api-key"
+VITE_FIREBASE_AUTH_DOMAIN="your-app.firebaseapp.com"
+VITE_FIREBASE_PROJECT_ID="your-app-id"
+VITE_FIREBASE_STORAGE_BUCKET="your-app.firebasestorage.app"
+VITE_FIREBASE_MESSAGING_SENDER_ID="your-messaging-sender-id"
+VITE_FIREBASE_APP_ID="your-web-app-id"
+VITE_FIREBASE_MEASUREMENT_ID="your-measurement-id"
+```
 
-3. **Test It**
-   ```bash
-   npm run dev
-   ```
-
-📖 **Detailed Guide:** [QUICK_START.md](QUICK_START.md)
+In the codebase, these parameters are securely accessed dynamically using:
+* `import.meta.env.VITE_GEMINI_API_KEY`
+* `import.meta.env.VITE_FIREBASE_API_KEY`, etc.
 
 ---
 
-## 📊 Real-time Statistics
+## ✨ Key Features & Interactive Sandboxes
 
-The website displays these live stats from Firebase:
+The website provides a hands-on preview of how OneRoom operates through live interactive sandboxes:
 
-- **Active Users** - Total registered users
-- **Tasks Completed** - Total tasks marked as done
-- **Expenses Tracked** - Total dollar amount tracked
-- **Satisfaction Rate** - User satisfaction percentage
-- **App Rating** - Play Store rating
-- **Total Downloads** - App download count
+### 1. 📋 Multi-Step How It Works Pager
+Located on the **How It Works** page, this interactive stepper contains functional previews of the core app workflows:
+* **Step 1: Invite Flatmates**: Enter roommate names to simulate invite link creation. Learn how users can scan room QR codes to join rooms instantly.
+* **Step 2: House Constitution**: Interactive toggles for quiet hours, visitor policy notifications, and common supplies. Roommates sign off on rules to create a consensus banner.
+* **Step 3: Chore Board**: Set up chores, assign tasks, rotate them dynamically with the **Rotate Chores** scheduler, and trigger roommate notifications using the **Nudge Roommate** feature.
+* **Step 4: Ledger & Sync**: Includes three advanced sub-tabs:
+  * **Bill Split**: Log expenses, select a payer, and auto-split balances equally with quick "Settle Up" functionality.
+  * **Trip Media Folder**: Upload photos/videos for group trips (e.g., Goa Trip) with a built-in **30-day auto-delete warning** that helps save local storage space while giving everyone time to download.
+  * **Personal Wallet**: View a personal budget dashboard. Showcases **Auto-Sync** technology aggregating transactions dynamically across all rooms and roadtrips (e.g. Greenwood Room, Goa Roadtrip) into a single personal ledger.
 
-### How It Works
+### 2. 🤖 AI Chatbot Assistant (Roomy)
+A persistent AI helper bubble in the bottom right corner of the website:
+* **Gemini Powered**: Uses the client-side Gemini API initialized securely with the local environment key.
+* **Deep Context**: Injected with a complete structure of the website, support contact numbers (`+91 8279677833`), pricing plans, Play Store links, and founder Mohd Raza Khan's CSE B.Tech background story.
+* **Smart Fallbacks**: Features NLP offline handling if API connections are interrupted.
 
-```
-Firebase Firestore → Stats Service → React Components → User's Browser
-                     (Real-time)      (Auto-update)      (Display)
-```
+### 3. 🌐 i18n Translation Ready
+Built-in lightweight internationalization helper (`src/utils/i18n.js`) wrapping JSX nodes in `{t('text')}`. Facilitates future translations and cleans up hardcoded JSX string warnings.
 
-Updates appear **instantly** without page refresh! ⚡
+### 4. 📊 Real-time Statistics
+Displays live metrics pulled directly from Firestore:
+* **Active Users** - Live registered user count
+* **Expenses Tracked** - Total money tracked (in ₹)
+* **Tasks Completed** - Live checklist count
+* **Satisfaction Rate** - User rating average
 
 ---
 
 ## 📁 Project Structure
 
+The React application is situated directly at the root of the `Website/` directory:
+
 ```
 Website/
-├── react-app/                  # React application
-│   ├── src/
-│   │   ├── components/         # React components
-│   │   │   ├── Hero.jsx       # Hero section
-│   │   │   ├── Stats.jsx      # Statistics section
-│   │   │   ├── Features.jsx   # Features showcase
-│   │   │   └── ...
-│   │   ├── config/
-│   │   │   └── firebase.js    # Firebase configuration
-│   │   ├── services/
-│   │   │   └── statsService.js # Stats fetching service
-│   │   └── App.jsx            # Main app component
-│   ├── public/                 # Static assets
-│   └── package.json
-├── functions/                  # Cloud Functions (optional)
-│   ├── index.js               # Automated stats updates
-│   └── package.json
-├── QUICK_START.md             # 5-minute setup guide
-├── FIREBASE_SETUP.md          # Detailed Firebase guide
-├── DATA_FLOW.md               # Architecture documentation
-└── README.md                  # This file
+├── .env                        # Local environment credentials (Git ignored)
+├── .gitignore                  # Git ignore configurations (protects credentials)
+├── index.html                  # HTML entry point
+├── jsconfig.json               # Compiler casing & type check settings
+├── vite.config.js              # Vite build configuration
+├── package.json                # Project dependencies and scripts
+├── public/                     # Static public assets (images, icons)
+├── src/
+│   ├── App.jsx                 # Application Router & Base Layout
+│   ├── main.jsx                # React DOM Mount Entry
+│   ├── index.css               # Main global stylesheet
+│   ├── components/             # Reusable UI components
+│   │   ├── ChatWidget.jsx      # AI Chatbot bubble (Roomy)
+│   │   ├── Header.jsx          # Site Navbar (i18n enabled)
+│   │   ├── Footer.jsx          # Site Footer
+│   │   ├── FeaturesBento.jsx   # Feature grid styling
+│   │   ├── Stats.jsx           # Firebase live stats widget
+│   │   └── ...
+│   ├── pages/                  # Route level page views
+│   │   ├── Home.jsx            # Home Page
+│   │   ├── HowItWorksPage.jsx  # Interactive Stepper/Pager Page
+│   │   ├── FeaturesPage.jsx    # Expanded Feature Showcase Cards
+│   │   ├── PricingPage.jsx     # App Subscription Pricing & Promos
+│   │   └── ...
+│   ├── config/
+│   │   ├── firebase.js         # Firebase config reading from environment
+│   │   └── websiteContext.js   # Chatbot system context definition
+│   ├── utils/
+│   │   └── i18n.js             # Language translation helper function
+│   └── styles/                 # Helper CSS sheets
+└── functions/                  # Cloud Functions for scraping/aggregating stats
+    ├── index.js                # Stats scheduler and Play Store scraper
+    └── package.json
 ```
 
 ---
@@ -132,221 +157,48 @@ Website/
 ### Development
 ```bash
 npm run dev          # Start dev server (http://localhost:5173)
-npm run build        # Build for production
-npm run preview      # Preview production build
-npm run lint         # Run ESLint
+npm run build        # Build static files for production (into dist/)
+npm run preview      # Preview local production build
+npm run lint         # Check for code linting errors
 ```
 
 ### Deployment
 ```bash
-npm run build        # Build the app
-firebase deploy      # Deploy to Firebase Hosting
+# Build the application
+npm run build
+
+# Deploy to Firebase Hosting
+firebase deploy --only hosting
 ```
 
 ---
 
 ## 🎨 Tech Stack
 
-### Frontend
-- **React 19.2.0** - UI library
-- **Vite 7.2.4** - Build tool
-- **Vanilla CSS** - Styling (no frameworks)
-- **Modern JavaScript** - ES6+ features
-
-### Backend
-- **Firebase Firestore** - Real-time database
-- **Firebase Cloud Functions** - Automated updates (optional)
-- **Firebase Hosting** - Website hosting
-
-### Tools
-- **ESLint** - Code linting
-- **Vite** - Fast development and builds
-- **Firebase CLI** - Deployment and management
+* **Frontend**: React 19.2.0, React Router, Vanilla CSS (harmonious gradients, modern typography, glassmorphism, responsive breakpoints)
+* **Build Tool**: Vite 7.2.4
+* **AI Engine**: Google Gemini API via `@google/generative-ai`
+* **Backend**: Firebase Firestore (real-time stats db), Firebase Hosting, Node.js Firebase Cloud Functions (automation)
 
 ---
 
-## 📖 Documentation
+## 📖 Documentation Reference
 
 | Document | Description |
 |----------|-------------|
-| [QUICK_START.md](QUICK_START.md) | 5-minute Firebase setup guide |
-| [FIREBASE_SETUP.md](react-app/FIREBASE_SETUP.md) | Detailed Firebase configuration |
-| [DATA_FLOW.md](DATA_FLOW.md) | Architecture and data flow |
-| [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) | Complete implementation details |
-| [functions/README.md](functions/README.md) | Cloud Functions setup |
+| [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) | Complete implementation details of firebase stats and function aggregators |
+| [firebase.json](firebase.json) | Firebase CLI Hosting and Functions rules configuration |
+| [firestore.rules](firestore.rules) | Security permissions for Firestore databases |
 
 ---
 
-## 🔄 Updating Stats
+## 🔒 Security & Safety
 
-### Method 1: Manual (Easiest)
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Navigate to Firestore → `appStats` → `global`
-3. Edit any field
-4. Save → Website updates instantly!
-
-### Method 2: Cloud Functions (Automatic)
-Deploy Cloud Functions to automatically:
-- Fetch Play Store data every 6 hours
-- Calculate stats from your database daily
-- Update Firestore automatically
-
-📖 **Setup:** [functions/README.md](functions/README.md)
-
----
-
-## 🌐 Deployment
-
-### Firebase Hosting
-
-```bash
-# Build the app
-cd react-app
-npm run build
-
-# Deploy to Firebase
-firebase deploy --only hosting
-```
-
-### Other Platforms
-
-The built files are in `react-app/dist/` and can be deployed to:
-- Vercel
-- Netlify
-- GitHub Pages
-- AWS S3
-- Any static hosting service
-
----
-
-## 🎯 Features
-
-### Implemented ✅
-- [x] Real-time Firebase integration
-- [x] Responsive design
-- [x] Smooth animations
-- [x] SEO optimization
-- [x] Play Store data integration
-- [x] Offline caching
-- [x] Error handling
-- [x] Loading states
-
-### Coming Soon 🚀
-- [ ] Analytics dashboard
-- [ ] Historical data charts
-- [ ] A/B testing
-- [ ] Multi-language support
-- [ ] Dark mode toggle
-
----
-
-## 🐛 Troubleshooting
-
-### Stats not showing?
-1. Check Firebase config in `firebase.js`
-2. Verify Firestore document exists
-3. Check browser console for errors
-4. Review security rules
-
-### Build errors?
-```bash
-rm -rf node_modules
-npm install
-npm run build
-```
-
-### More help?
-- Check [QUICK_START.md](QUICK_START.md)
-- Review [FIREBASE_SETUP.md](react-app/FIREBASE_SETUP.md)
-- See [Troubleshooting Guide](IMPLEMENTATION_SUMMARY.md#troubleshooting)
-
----
-
-## 📈 Performance
-
-- ⚡ **Build Time:** ~700ms
-- 📦 **Bundle Size:** 544 KB (169 KB gzipped)
-- 🎯 **Lighthouse Score:** 95+
-- 🔄 **Real-time Updates:** <100ms latency
-
----
-
-## 🔒 Security
-
-- ✅ Firestore security rules configured
-- ✅ Read-only access for public stats
-- ✅ Write access only for Cloud Functions
-- ✅ Environment variables for sensitive data
-- ✅ HTTPS enforced
-
----
-
-## 💰 Cost
-
-### Firebase Free Tier
-- **Firestore Reads:** 50K/day (enough for most sites)
-- **Hosting:** 10 GB storage, 360 MB/day transfer
-- **Cloud Functions:** 2M invocations/month
-
-**Estimated monthly cost:** $0 for small to medium sites
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 Support
-
-- 📧 Email: support@oneroom.app
-- 🌐 Website: https://oneroom.app
-- 📱 App: [iOS](https://apps.apple.com/app/oneroom) | [Android](https://play.google.com/store/apps/details?id=com.oneroom.app)
-
----
-
-## 🙏 Acknowledgments
-
-- Built with [React](https://reactjs.org/)
-- Powered by [Firebase](https://firebase.google.com/)
-- Bundled with [Vite](https://vitejs.dev/)
-- Icons from [Emoji](https://emojipedia.org/)
-
----
-
-## 📊 Stats
-
-![GitHub stars](https://img.shields.io/github/stars/yourusername/oneroom-website?style=social)
-![GitHub forks](https://img.shields.io/github/forks/yourusername/oneroom-website?style=social)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/oneroom-website)
+1. **Credentials Safety**: The `.env` file holds credentials and is git-ignored. Codebase files use `import.meta.env` dynamically. Never commit `.env` or raw key secrets.
+2. **Access Rules**: Firestore Security Rules (`firestore.rules`) enforce read-only public access to `appStats/global` and block unauthorized writes.
+3. **Scan Optimization**: A `.vscode/settings.json` is configured to exclude `dist/` build folders from editor indexes to avoid unnecessary processor loads and minified script alerts.
 
 ---
 
 **Made with ❤️ for OneRoom**
-
-*Simplifying shared living, one room at a time.*
-
----
-
-## 🎯 Next Steps
-
-1. ✅ Read [QUICK_START.md](QUICK_START.md)
-2. ✅ Configure Firebase
-3. ✅ Test the website
-4. ✅ Deploy to production
-5. ✅ Monitor performance
-
-**Ready to get started?** Open [QUICK_START.md](QUICK_START.md) now! 🚀
+*Simplifying shared flat living, one flatmate at a time.*

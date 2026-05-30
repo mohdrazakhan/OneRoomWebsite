@@ -1,160 +1,163 @@
-import { useState, useEffect } from 'react'
 import './Testimonials.css'
 
 function Testimonials() {
-    const [activeIndex, setActiveIndex] = useState(0)
-
     const testimonials = [
         {
+            name: 'Anmol Singh',
+            avatar: '🏎️',
+            avatarColor: '#ea4335',
+            rating: 5,
+            date: 'January 21, 2026',
+            text: 'Amazing Application, solves a very important issue for people living in Pg and hostels. Clean and fast interface, superb functionality.'
+        },
+        {
+            name: 'Kirtiman Singh',
+            avatar: '🥷',
+            avatarColor: '#0f9d58',
+            rating: 5,
+            date: 'March 4, 2026',
+            text: 'I use this app to monitor my expenses, this is an amazing app for Expense managing love it 🤩'
+        },
+        {
+            name: 'Rohit Barnwal',
+            avatar: 'R',
+            avatarColor: '#ec407a',
+            rating: 5,
+            date: 'March 4, 2026',
+            text: 'This app is really helpful specially in task remembering, amazing app but might need to improvement in auto task assigning feature when toggle off/on'
+        },
+        {
+            name: 'Crazy Queen',
+            avatar: '🏰',
+            avatarColor: '#ff9800',
+            rating: 1,
+            date: 'January 21, 2026',
+            text: 'very poor not to install this app any more iam requesting everyone not to install this app this is useless app please don\'t download it'
+        },
+        {
             name: 'Amit Kumar',
-            role: 'Student',
-            avatar: '👨‍🎓',
+            avatar: 'A',
+            avatarColor: '#00acc1',
             rating: 5,
-            text: 'This app made dividing bills so simple for our student apartment. No more awkward conversations about money!'
+            date: 'March 4, 2026',
+            text: 'this is really very useful app'
         },
         {
-            name: 'Kaleem Shahid',
-            role: 'Working Professional',
-            avatar: '👨‍💼',
+            name: 'S.H. Solutions',
+            avatar: '💼',
+            avatarColor: '#795548',
             rating: 5,
-            text: 'Perfect for busy professionals. Chores are finally under control and the notification system is a lifesaver.'
+            date: 'December 28, 2025',
+            text: 'this application is really helpful 😄 , it help me to track room expenses with room tasks as well love it'
         },
         {
-            name: 'Pranyush Jha',
-            role: 'Student',
-            avatar: '👩‍🎓',
+            name: 'Abhi',
+            avatar: '🐱',
+            avatarColor: '#7e57c2',
             rating: 5,
-            text: 'Impressive UI/UX. The expense analytics are detailed and accurate. Makes managing shared finances completely seamless.'
+            date: 'January 21, 2026',
+            text: 'nice working app'
         },
         {
-            name: 'Prathibha Dungel',
-            role: 'Student',
-            avatar: '👩‍🎓',
+            name: 'Gyani Bot',
+            avatar: '🤖',
+            avatarColor: '#4285f4',
             rating: 5,
-            text: 'It helped us organize our daily tasks during exam weeks perfectly. We finally have a clean flat without arguments.'
+            date: 'January 21, 2026',
+            text: 'Good experience 😃'
         },
         {
-            name: 'Jayanti Kumari',
-            role: 'Student',
-            avatar: '👩‍🏫',
+            name: 'Prajwal Jha',
+            avatar: '🕶️',
+            avatarColor: '#607d8b',
             rating: 5,
-            text: 'No more fighting over who buys milk! The shared grocery list features are exactly what we needed.'
-        },
-        {
-            name: 'Chandan Kumar Tiwari',
-            role: 'Student',
-            avatar: '👨‍🎓',
-            rating: 5,
-            text: 'Best app for hostel life. Really helpful for splitting mess bills and keeping track of group expenses.'
+            date: 'January 24, 2026',
+            text: 'Excellent'
         }
     ]
 
-    const [itemsPerSlide, setItemsPerSlide] = useState(3)
-
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth < 1024) {
-                setItemsPerSlide(1)
-            } else {
-                setItemsPerSlide(3)
-            }
-        }
-
-        handleResize() // Set initial value
-        window.addEventListener('resize', handleResize)
-        return () => window.removeEventListener('resize', handleResize)
-    }, [])
-
-    const maxIndex = testimonials.length - itemsPerSlide
-
-    const nextSlide = () => {
-        setActiveIndex((prev) =>
-            prev >= maxIndex ? 0 : prev + 1
-        )
-    }
-
-    const prevSlide = () => {
-        setActiveIndex((prev) =>
-            prev <= 0 ? maxIndex : prev - 1
-        )
-    }
-
-    // Auto-advance slides every 5 seconds
-    useEffect(() => {
-        const interval = setInterval(nextSlide, 5000)
-        return () => clearInterval(interval)
-    }, [maxIndex]) // Re-create interval if maxIndex changes
+    // Duplicate testimonials to create a seamless infinite loop
+    const marqueeTestimonials = [...testimonials, ...testimonials]
 
     return (
         <section id="testimonials" className="testimonials-section">
             <div className="container">
-                <div className="section-header reveal">
-                    <h2 className="section-title">
-                        Loved by <span className="text-gradient">thousands</span>
-                    </h2>
-                    <p className="section-subtitle">
-                        See what our users have to say about OneRoom
-                    </p>
-                </div>
-
-                <div className="testimonials-slider-container">
-                    <button className="slider-btn prev-btn" onClick={prevSlide} aria-label="Previous testimonial">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="15 18 9 12 15 6"></polyline>
-                        </svg>
-                    </button>
-
-                    <div className="testimonials-viewport">
-                        <div
-                            className="testimonials-track"
-                            style={{
-                                transform: `translateX(-${activeIndex * (100 / itemsPerSlide)}%)`
-                            }}
-                        >
-                            {testimonials.map((testimonial, index) => (
-                                <div
-                                    key={index}
-                                    className="testimonial-card"
-                                    style={{
-                                        flex: itemsPerSlide === 1
-                                            ? '0 0 100%'
-                                            : `0 0 calc(${100 / itemsPerSlide}% - 1.5rem)`,
-                                        margin: itemsPerSlide === 1 ? 0 : '0 0.75rem'
-                                    }}
-                                >
-                                    <div className="testimonial-rating">
-                                        {[...Array(testimonial.rating)].map((_, i) => (
-                                            <span key={i} className="star">⭐</span>
-                                        ))}
-                                    </div>
-                                    <p className="testimonial-text">"{testimonial.text}"</p>
-                                    <div className="testimonial-author">
-                                        <div className="author-avatar">{testimonial.avatar}</div>
-                                        <div className="author-info">
-                                            <div className="author-name">{testimonial.name}</div>
-                                            <div className="author-role">{testimonial.role}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                <div className="testimonials-header-flex reveal">
+                    <div className="testimonials-header-text">
+                        <h2 className="section-title">
+                            Loved by <span style={{ color: 'var(--brand-purple)' }}>Hundreds</span>
+                        </h2>
+                        <p className="section-subtitle">
+                            See what our users have to say about OneRoom
+                        </p>
                     </div>
 
-                    <button className="slider-btn next-btn" onClick={nextSlide} aria-label="Next testimonial">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </button>
+                    <div className="testimonials-header-stats">
+                        <div className="stat-box">
+                            <div className="stat-value">4.7★</div>
+                            <div className="stat-label">14 reviews</div>
+                        </div>
+                        <div className="stat-separator"></div>
+                        <div className="stat-box">
+                            <div className="stat-value">100+</div>
+                            <div className="stat-label">Downloads</div>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <div className="slider-dots">
-                    {[...Array(maxIndex + 1)].map((_, index) => (
-                        <button
-                            key={index}
-                            className={`slider-dot ${index === activeIndex ? 'active' : ''}`}
-                            onClick={() => setActiveIndex(index)}
-                            aria-label={`Go to slide ${index + 1}`}
-                        />
+            <div className="testimonials-marquee-wrapper">
+                <div className="animate-marquee">
+                    {marqueeTestimonials.map((testimonial, index) => (
+                        <div key={index} className="testimonial-card bento-shadow">
+                            {/* Card Header: Avatar + User Info */}
+                            <div className="testimonial-header">
+                                {testimonial.avatar.length === 1 ? (
+                                    <div 
+                                        className="author-avatar-circle" 
+                                        style={{ backgroundColor: testimonial.avatarColor }}
+                                    >
+                                        {testimonial.avatar}
+                                    </div>
+                                ) : (
+                                    <div 
+                                        className="author-avatar-emoji"
+                                        style={{ backgroundColor: testimonial.avatarColor + '15' }}
+                                    >
+                                        {testimonial.avatar}
+                                    </div>
+                                )}
+                                <div className="author-meta">
+                                    <div className="author-name">{testimonial.name}</div>
+                                    <div className="rating-date-row">
+                                        <div className="testimonial-rating">
+                                            {[...Array(5)].map((_, i) => (
+                                                <span 
+                                                    key={i} 
+                                                    className={`star ${i < testimonial.rating ? 'star-filled' : 'star-empty'}`}
+                                                >
+                                                    ★
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <span className="testimonial-date">{testimonial.date}</span>
+                                    </div>
+                                </div>
+                                <div className="playstore-icon" title="Verified Google Play Review">
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path d="M3.25 2.5a1 1 0 0 0-.25.7v17.6a1 1 0 0 0 .25.7l9.75-9.75z" fill="#00c6ff"/>
+                                        <path d="M17.06 7.64l-4.06 4.06 4.06 4.06 3.69-2.1a2 2 0 0 0 0-3.92z" fill="#ffeb3b"/>
+                                        <path d="M3.25 2.5L13 12.25l4.06-4.06-13.81-7.89a1 1 0 0 0-1 0z" fill="#00e676"/>
+                                        <path d="M3.25 21.5a1 1 0 0 0 1 0l13.81-7.89-4.06-4.06z" fill="#ff1744"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Card Body: Text */}
+                            <div className="testimonial-body">
+                                <p className="testimonial-text">"{testimonial.text}"</p>
+                            </div>
+                        </div>
                     ))}
                 </div>
             </div>

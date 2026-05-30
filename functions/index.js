@@ -268,15 +268,57 @@ exports.updateUserStatsOnDelete = functions.firestore.onDocumentDeleted('users/{
 
 // 2. Bug Reports Triggers
 exports.updateBugStatsOnCreate = functions.firestore.onDocumentCreated('bug_reports/{reportId}', async (event) => {
-    await db.collection('appStats').doc('global').update({
+    const data = event.data.data();
+    const status = data.status || 'open';
+    const batch = db.batch();
+    const globalRef = db.collection('appStats').doc('global');
+    const bugStatsRef = db.collection('appStats').doc('bugStats');
+
+    batch.update(globalRef, {
         bugReports: admin.firestore.FieldValue.increment(1)
     });
+    batch.set(bugStatsRef, {
+        total: admin.firestore.FieldValue.increment(1),
+        [status]: admin.firestore.FieldValue.increment(1),
+        lastUpdated: admin.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    await batch.commit();
 });
 
 exports.updateBugStatsOnDelete = functions.firestore.onDocumentDeleted('bug_reports/{reportId}', async (event) => {
-    await db.collection('appStats').doc('global').update({
+    const data = event.data.data();
+    const status = data.status || 'open';
+    const batch = db.batch();
+    const globalRef = db.collection('appStats').doc('global');
+    const bugStatsRef = db.collection('appStats').doc('bugStats');
+
+    batch.update(globalRef, {
         bugReports: admin.firestore.FieldValue.increment(-1)
     });
+    batch.set(bugStatsRef, {
+        total: admin.firestore.FieldValue.increment(-1),
+        [status]: admin.firestore.FieldValue.increment(-1),
+        lastUpdated: admin.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    await batch.commit();
+});
+
+// Track bug status changes for public stats
+exports.updateBugStatsOnUpdate = functions.firestore.onDocumentUpdated('bug_reports/{reportId}', async (event) => {
+    const before = event.data.before.data();
+    const after = event.data.after.data();
+    const oldStatus = before.status || 'open';
+    const newStatus = after.status || 'open';
+
+    if (oldStatus !== newStatus) {
+        await db.collection('appStats').doc('bugStats').set({
+            [oldStatus]: admin.firestore.FieldValue.increment(-1),
+            [newStatus]: admin.firestore.FieldValue.increment(1),
+            lastUpdated: admin.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+    }
 });
 
 // 3. Expenses Triggers (Assuming 'expenses' is a subcollection of 'rooms')
@@ -335,5 +377,217 @@ exports.getStats = functions.https.onRequest(async (req, res) => {
             success: false,
             error: error.message
         });
+    }
+});
+
+// ────────────────────────────────────────────────
+// Bug Reply Cloud Function
+// Sends email reply to bug reporter + stores in Firestore
+// ────────────────────────────────────────────────
+
+/**
+ * Callable Cloud Function: sendBugReply
+ * 
+ * Called from the Bug Dashboard when admin replies to a bug report.
+ * - Sends email to the reporter's contact email via Nodemailer
+ * - Stores the reply in bug_reports/{bugId}/replies subcollection
+ * 
+ * Required Firebase Config (set via CLI):
+ *   firebase functions:config:set
+ *     smtp.email="your-email@gmail.com"
+ *     smtp.password="your-app-password"
+ * 
+ * Or use environment variables in .env file:
+ *   SMTP_EMAIL=your-email@gmail.com
+ *   SMTP_PASSWORD=your-app-password
+ */
+exports.sendBugReply = functions.https.onCall(async (request) => {
+    // Verify caller is authenticated
+    if (!request.auth) {
+        throw new functions.https.HttpsError(
+            'unauthenticated',
+            'Must be logged in to send replies.'
+        );
+    }
+
+    const { bugId, bugTitle, recipientEmail, message } = request.data;
+
+    // Validate inputs
+    if (!bugId || !message) {
+        throw new functions.https.HttpsError(
+            'invalid-argument',
+            'bugId and message are required.'
+        );
+    }
+
+    // Verify the bug report exists
+    const bugDoc = await db.collection('bug_reports').doc(bugId).get();
+    if (!bugDoc.exists) {
+        throw new functions.https.HttpsError(
+            'not-found',
+            'Bug report not found.'
+        );
+    }
+
+    // Try to send email if recipient email is valid
+    let emailSent = false;
+    if (recipientEmail && recipientEmail.includes('@')) {
+        try {
+            const nodemailer = require('nodemailer');
+
+            // Configure SMTP transporter
+            // Option 1: Using environment variables
+            const smtpEmail = process.env.SMTP_EMAIL;
+            const smtpPassword = process.env.SMTP_PASSWORD;
+
+            if (smtpEmail && smtpPassword) {
+                const transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: smtpEmail,
+                        pass: smtpPassword,
+                    },
+                });
+
+                await transporter.sendMail({
+                    from: `"One Room Support" <${smtpEmail}>`,
+                    to: recipientEmail,
+                    subject: `Re: Bug Report — ${bugTitle || 'Your Report'}`,
+                    html: `
+                        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
+                            <div style="background: linear-gradient(135deg, #8e7cf0, #674eeb); padding: 20px 24px; border-radius: 12px 12px 0 0;">
+                                <h2 style="color: white; margin: 0; font-size: 18px;">One Room — Bug Report Update</h2>
+                            </div>
+                            <div style="background: #f9fafb; padding: 24px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
+                                <p style="color: #374151; margin: 0 0 8px;">Regarding: <strong>${bugTitle || 'Your Bug Report'}</strong></p>
+                                <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
+                                <div style="color: #1f2937; line-height: 1.7; white-space: pre-wrap;">${message}</div>
+                                <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
+                                <p style="color: #9ca3af; font-size: 13px; margin: 0;">
+                                    — The One Room Team<br/>
+                                    This is an automated reply. Please report new issues from within the app.
+                                </p>
+                            </div>
+                        </div>
+                    `,
+                });
+
+                emailSent = true;
+                console.log(`Email sent to ${recipientEmail} for bug ${bugId}`);
+            } else {
+                console.warn('SMTP credentials not configured. Set SMTP_EMAIL and SMTP_PASSWORD environment variables.');
+            }
+        } catch (emailError) {
+            console.error('Failed to send email:', emailError);
+            // Don't throw — reply is still saved in Firestore
+        }
+    }
+
+    return { success: true, emailSent };
+});
+
+// ────────────────────────────────────────────────
+// Admin Notification Cloud Function
+// Sends push notifications to users/rooms/broadcast via FCM
+// ────────────────────────────────────────────────
+
+/**
+ * Callable Cloud Function: sendAdminNotification
+ * 
+ * Called from the Admin Panel to send push notifications.
+ * Supports three types:
+ *   - broadcast: Sends to 'all_users' FCM topic
+ *   - individual: Sends to a specific user's FCM tokens
+ *   - room: Sends to 'room_{roomId}' FCM topic
+ */
+exports.sendAdminNotification = functions.https.onCall(async (request) => {
+    // Verify caller is authenticated
+    if (!request.auth) {
+        throw new functions.https.HttpsError(
+            'unauthenticated',
+            'Must be logged in to send notifications.'
+        );
+    }
+
+    const { type, title, body, userId, roomId } = request.data;
+
+    if (!title || !body) {
+        throw new functions.https.HttpsError(
+            'invalid-argument',
+            'title and body are required.'
+        );
+    }
+
+    const messaging = admin.messaging();
+    let sent = 0;
+
+    try {
+        if (type === 'broadcast') {
+            // Send to all_users topic
+            await messaging.send({
+                topic: 'all_users',
+                notification: { title, body },
+                data: { type: 'admin_broadcast' },
+                android: { priority: 'high' },
+                apns: { payload: { aps: { sound: 'default' } } },
+            });
+            sent = 1; // Topic sends don't return exact count
+            console.log('Broadcast notification sent to all_users topic');
+
+        } else if (type === 'individual' && userId) {
+            // Fetch user's FCM tokens
+            const tokensSnap = await db.collection('users').doc(userId).collection('tokens').get();
+            const tokens = tokensSnap.docs.map(d => d.data().token).filter(Boolean);
+
+            if (tokens.length === 0) {
+                return { success: true, sent: 0, message: 'User has no registered devices' };
+            }
+
+            // Send to each token
+            const response = await messaging.sendEachForMulticast({
+                tokens,
+                notification: { title, body },
+                data: { type: 'admin_notification' },
+                android: { priority: 'high' },
+                apns: { payload: { aps: { sound: 'default' } } },
+            });
+
+            sent = response.successCount;
+
+            // Clean up invalid tokens
+            response.responses.forEach((resp, i) => {
+                if (resp.error && (
+                    resp.error.code === 'messaging/invalid-registration-token' ||
+                    resp.error.code === 'messaging/registration-token-not-registered'
+                )) {
+                    db.collection('users').doc(userId).collection('tokens').doc(tokensSnap.docs[i].id).delete();
+                }
+            });
+
+            console.log(`Individual notification sent to ${userId}: ${sent}/${tokens.length} succeeded`);
+
+        } else if (type === 'room' && roomId) {
+            // Send to room topic
+            await messaging.send({
+                topic: `room_${roomId}`,
+                notification: { title, body },
+                data: { type: 'admin_room_notification', roomId },
+                android: { priority: 'high' },
+                apns: { payload: { aps: { sound: 'default' } } },
+            });
+            sent = 1;
+            console.log(`Room notification sent to room_${roomId}`);
+
+        } else {
+            throw new functions.https.HttpsError(
+                'invalid-argument',
+                'Invalid notification type. Use broadcast, individual, or room.'
+            );
+        }
+
+        return { success: true, sent };
+    } catch (error) {
+        console.error('Failed to send notification:', error);
+        throw new functions.https.HttpsError('internal', error.message);
     }
 });

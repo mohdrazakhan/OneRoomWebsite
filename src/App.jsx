@@ -8,6 +8,8 @@ import ChatWidget from './components/ChatWidget'
 import Home from './pages/Home'
 import FeaturesPage from './pages/FeaturesPage'
 import PricingPage from './pages/PricingPage'
+import HowItWorksPage from './pages/HowItWorksPage'
+import CommunityPage from './pages/CommunityPage'
 import FAQPage from './pages/FAQPage'
 import AboutPage from './pages/AboutPage'
 import SupportPage from './pages/SupportPage'
@@ -19,6 +21,18 @@ import VerifyCertificatePage from './pages/VerifyCertificatePage'
 function App() {
   const [showChat, setShowChat] = useState(false)
   const location = useLocation()
+  
+  const [mousePos, setMousePos] = useState({ 
+      x: typeof window !== 'undefined' ? window.innerWidth / 2 : 600, 
+      y: 400 
+  })
+
+  const handleMouseMove = (e) => {
+      setMousePos({
+          x: e.clientX,
+          y: e.clientY,
+      })
+  }
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -45,12 +59,21 @@ function App() {
   }, [location])
 
   return (
-    <div className="App">
+    <div className="App" onMouseMove={handleMouseMove}>
+      <div 
+          className="global-grid-bg"
+          style={{
+              WebkitMaskImage: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(0, 0, 0, 1) 0%, transparent 80%)`,
+              maskImage: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(0, 0, 0, 1) 0%, transparent 80%)`
+          }}
+      />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/features" element={<FeaturesPage />} />
         <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
+        <Route path="/community" element={<CommunityPage />} />
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/support" element={<SupportPage />} />

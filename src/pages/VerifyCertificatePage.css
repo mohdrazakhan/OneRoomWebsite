@@ -1,21 +1,11 @@
-.verify-page {
-  padding: 120px 0 80px 0;
-  min-height: 80vh;
-  background-color: var(--bg-light);
-}
-
-.verify-header {
-  margin-bottom: 40px;
-}
-
 .verify-card {
   max-width: 600px;
   margin: 0 auto;
-  background-color: var(--white);
-  border-radius: 16px;
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
   padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
 }
 
 .verify-form .form-group {
@@ -25,24 +15,27 @@
 .verify-form label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 500;
-  color: var(--text-dark);
+  font-weight: 600;
+  color: var(--text-main);
+  font-family: var(--font-heading);
 }
 
 .verify-form input {
   width: 100%;
   padding: 14px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   font-size: 16px;
   outline: none;
   transition: all 0.3s ease;
   font-family: inherit;
+  background-color: var(--bg-card);
+  color: var(--text-main);
 }
 
 .verify-form input:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 4px rgba(var(--primary-color-rgb), 0.1);
+  border-color: var(--brand-purple);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
 }
 
 .verify-form .button {
@@ -55,7 +48,7 @@
 .verify-message {
   margin-top: 30px;
   padding: 16px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -83,16 +76,16 @@
 .verify-result {
   margin-top: 30px;
   padding-top: 30px;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border);
 }
 
 .certificate-details {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background-color: var(--bg-light);
+  background-color: var(--bg-low);
   padding: 24px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
 }
 
 .detail-row {
@@ -109,21 +102,17 @@
 }
 
 .detail-label {
-  color: var(--text-light);
+  color: var(--text-muted);
   font-weight: 500;
 }
 
 .detail-value {
-  color: var(--text-dark);
+  color: var(--text-main);
   font-weight: 600;
   text-align: right;
 }
 
 @media (max-width: 768px) {
-  .verify-page {
-    padding: 100px 0 60px 0;
-  }
-
   .verify-card {
     padding: 24px;
   }

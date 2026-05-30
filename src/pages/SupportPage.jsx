@@ -1,6 +1,6 @@
 function SupportPage() {
     return (
-        <main className="page-container" style={{ paddingTop: '100px', paddingBottom: '4rem', minHeight: '80vh' }}>
+        <main className="page-container">
             <div className="container">
                 <div className="page-header" style={{ textAlign: 'center', marginBottom: '4rem' }}>
                     <h1>Support Center</h1>

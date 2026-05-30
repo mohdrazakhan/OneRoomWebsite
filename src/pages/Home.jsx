@@ -1,16 +1,17 @@
 import Hero from '../components/Hero'
 import Stats from '../components/Stats'
-import Showcase from '../components/Showcase'
+import NeutralThirdParty from '../components/NeutralThirdParty'
+import FeaturesBento from '../components/FeaturesBento'
 import Testimonials from '../components/Testimonials'
 import Newsletter from '../components/Newsletter'
-import Features from '../components/Features'
 
 function Home() {
     return (
         <main>
             <Hero />
             <Stats />
-            <Showcase />
+            <NeutralThirdParty />
+            <FeaturesBento />
             <Testimonials />
             <Newsletter />
         </main>

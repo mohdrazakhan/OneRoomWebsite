@@ -48,29 +48,28 @@ const JoinRoomPage = () => {
     }, [roomId])
 
     return (
-        <div className="join-room-container" style={{
-            minHeight: '80vh',
+        <main className="page-container" style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '20px',
-            background: 'linear-gradient(135deg, #f7f7ff 0%, #ffffff 100%)' // Light clean background
+            padding: '40px var(--spacing-md)'
         }}>
-            <div className="glass" style={{
+            <div className="glass bento-shadow" style={{
                 padding: '48px 32px',
-                borderRadius: '24px',
+                borderRadius: 'var(--radius-lg)',
                 maxWidth: '480px',
                 width: '100%',
                 textAlign: 'center',
-                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.05)'
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)'
             }}>
                 <div style={{
                     fontSize: '60px',
                     marginBottom: '24px',
-                    background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+                    background: 'linear-gradient(135deg, var(--brand-purple), var(--sage-green))',
                     width: '100px',
                     height: '100px',
-                    borderRadius: '24px',
+                    borderRadius: 'var(--radius-md)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -87,15 +86,15 @@ const JoinRoomPage = () => {
 
                 {roomId && (
                     <div style={{
-                        background: 'var(--bg-card)', // Changed to variable
+                        background: 'var(--bg-low)',
                         padding: '16px 24px',
-                        borderRadius: '12px',
+                        borderRadius: 'var(--radius-sm)',
                         marginBottom: '32px',
                         border: '2px solid var(--primary-light)'
                     }}>
                         <div style={{
                             fontSize: '12px',
-                            color: 'var(--primary)',
+                            color: 'var(--brand-purple)',
                             fontWeight: '600',
                             textTransform: 'uppercase',
                             letterSpacing: '1px',
@@ -105,7 +104,8 @@ const JoinRoomPage = () => {
                             fontSize: '24px',
                             fontWeight: '700',
                             fontFamily: 'monospace',
-                            letterSpacing: '2px'
+                            letterSpacing: '2px',
+                            color: 'var(--text-main)'
                         }}>{roomId}</div>
                     </div>
                 )}
@@ -115,8 +115,8 @@ const JoinRoomPage = () => {
                     <div className="spinner" style={{
                         width: '40px',
                         height: '40px',
-                        border: '4px solid #f3f3f3',
-                        borderTop: '4px solid var(--primary)',
+                        border: '4px solid var(--border)',
+                        borderTop: '4px solid var(--brand-purple)',
                         borderRadius: '50%',
                         margin: '0 auto 24px',
                         animation: 'spin 1s linear infinite'
@@ -127,29 +127,25 @@ const JoinRoomPage = () => {
                     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
                 `}</style>
 
-                <p style={{ marginBottom: '24px', fontWeight: '500' }}>{status}</p>
+                <p style={{ marginBottom: '24px', fontWeight: '500', color: 'var(--text-main)' }}>{status}</p>
 
                 {showDownload && (
                     <a
                         href="https://play.google.com/store/apps/details?id=com.oneroom.app&hl=en"
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="btn btn-primary"
                         style={{
-                            display: 'inline-block',
-                            padding: '16px 32px',
-                            background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
-                            color: 'white',
-                            borderRadius: '12px',
-                            fontWeight: '600',
-                            transition: 'transform 0.2s, box-shadow 0.2s',
-                            boxShadow: 'var(--shadow-lg)'
+                            display: 'inline-flex',
+                            width: 'auto',
+                            padding: '1rem 2rem'
                         }}
                     >
                         {/iPhone|iPad|iPod/i.test(navigator.userAgent) ? 'Available on Android' : 'Download OneRoom'}
                     </a>
                 )}
             </div>
-        </div>
+        </main>
     )
 }
 

@@ -25,7 +25,7 @@ dist-ssr
 
 # Scripts
 seed_certificates.js
-
+firestore.rules
 # Environments
 .env
 .env.local

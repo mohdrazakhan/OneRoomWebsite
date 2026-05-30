@@ -1,24 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 /* CSS Variables */
 :root {
   /* Colors */
-  --primary: #8e7cf0;
-  --primary-hover: #7260d6;
-  --primary-light: #d8d2fa;
-  --secondary: #674eeb;
+  --primary: #6b38d4;
+  --primary-hover: #5516be;
+  --primary-light: #e9ddff;
+  --secondary: #516447;
+  --secondary-light: #d1e6c2;
+  --tertiary: #924630;
   --accent: #def07c;
 
+  /* Custom Warm Domesticity Branding */
+  --brand-purple: #8B5CF6;
+  --sage-green: #7C9070;
+  --terracotta: #D67B62;
+  --soft-cream: #FDFBF7;
+  --ink-blue: #111827;
+  --dark-navy: #0f172a;
+
   /* Backgrounds */
-  --bg-main: #FFFFFF;
-  --bg-dark: #1e1b4b;
-  /* Deep purple-black */
-  --bg-card: #F9FAFB;
-  --bg-glass: rgba(255, 255, 255, 0.9);
+  --bg-main: #fbf9f5; /* Soft Cream */
+  --bg-dark: #0f172a; /* Dark Navy */
+  --bg-card: #ffffff; /* White bento-cards */
+  --bg-glass: rgba(251, 249, 245, 0.8);
+  --bg-low: #f5f3ef;
+  --bg-neutral: #efeeea;
+  --bg-high: #eae8e4;
+  --bg-highest: #e4e2de;
 
   /* Text */
-  --text-main: #1F2937;
-  --text-muted: #6B7280;
+  --text-main: #111827; /* Ink Blue */
+  --text-muted: #494454; /* On Surface Variant */
   --text-invert: #FFFFFF;
 
   /* Spacing */
@@ -29,11 +42,11 @@
   --spacing-xl: 5rem;
 
   /* Border */
-  --border: #E5E7EB;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 32px;
+  --border: #cbc3d7;
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
   --radius-full: 9999px;
 
   /* Shadows */
@@ -99,6 +112,41 @@ img {
   margin: 0 auto;
   padding: 0 var(--spacing-md);
 }
+
+/* Section Headers */
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-title {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  color: var(--text-main);
+  font-family: var(--font-heading), 'Outfit', sans-serif;
+}
+
+.section-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    margin-bottom: 2.5rem;
+  }
+  .section-title {
+    font-size: 2.5rem;
+  }
+  .section-subtitle {
+    font-size: 1.15rem;
+  }
+}
+
 
 .text-gradient {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -229,6 +277,36 @@ img {
 ::selection {
   background: var(--primary-light);
   color: white;
+}
+
+/* Bento shadow utility */
+.bento-shadow {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Scroll reveal utility */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Marquee scrolling animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
 /* Responsive */
