@@ -40,8 +40,8 @@ exports.updatePlayStoreStats = functions.scheduler.onSchedule({
 
         console.log('Fetching Play Store data for:', APP_ID);
 
-        // Fetch app details from Play Store
-        const appData = await gplay.app({ appId: APP_ID });
+        // Fetch app details from Play Store (specify country: 'in' to fetch rating from Indian Play Store)
+        const appData = await gplay.app({ appId: APP_ID, country: 'in' });
 
         // Extract relevant stats
         const playStoreStats = {
@@ -105,6 +105,7 @@ exports.fetchPlayStoreData = functions.https.onRequest(async (req, res) => {
 
         await db.collection('appStats').doc('global').set({
             appRating: playStoreStats.rating,
+            ratingCount: playStoreStats.ratingCount, // Added rating count
             totalDownloads: playStoreStats.downloads,
             lastUpdated: admin.firestore.FieldValue.serverTimestamp()
         }, { merge: true });

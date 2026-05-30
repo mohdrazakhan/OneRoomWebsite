@@ -136,7 +136,7 @@ function Hero() {
                             </div>
                             <div className="stat">
                                 <div className="stat-number">
-                                    {stats.appRating}{stats.ratingCount || 0}
+                                    {stats.appRating} <span style={{ fontSize: '0.55em', opacity: 0.75, fontWeight: 500 }}>({stats.ratingCount || 0})</span>
                                 </div>
                                 <div className="stat-label">{t('APP RATING')}</div>
                             </div>
